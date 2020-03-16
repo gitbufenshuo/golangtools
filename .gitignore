@@ -14,3 +14,4 @@
 *.key
 *.pem
 *.crt
+.DS_Store
