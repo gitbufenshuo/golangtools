@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo"
@@ -46,5 +47,8 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.GET("/ws", hello)
-	e.Logger.Fatal(e.StartTLS(":9999", "./tls/leaf.pem", "./tls/leaf.key"))
+	e.GET("/hello", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, "h")
+	})
+	e.Logger.Fatal(e.StartTLS(":443", "./leaf.pem", "./leaf.key"))
 }
