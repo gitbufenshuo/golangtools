@@ -13,7 +13,7 @@ func main() {
 	thefilename := os.Getenv("FILENAME")
 	fmt.Println(thefilename)
 	segs := strings.Split(thefilename, ".")
-	frontName := segs[0]
+	// frontName := segs[0]
 	suffixName := segs[1]
 	var fileout string
 	var url string
@@ -34,4 +34,5 @@ func main() {
 	}
 	data, _ := ioutil.ReadAll(resp.Body)
 	ioutil.WriteFile(fileout, data, 0644)
+	resp.Body.Close()
 }
