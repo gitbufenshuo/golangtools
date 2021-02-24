@@ -24,7 +24,6 @@ func main() {
 		return
 	}
 
-	//水印,用的是我自己支付宝的二维码
 	wmb_file, err := os.Open("fg.png")
 	if err != nil {
 		fmt.Println("打开水印图片出错")
