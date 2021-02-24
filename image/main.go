@@ -18,9 +18,10 @@ import (
 
 const (
 	fontFile = "my.ttf" // 需要使用的字体文件
-	fontSize = 20       // 字体尺寸
 	fontDPI  = 72       // 屏幕每英寸的分辨率
 )
+
+var fontSize float64 = 20 // 字体尺寸
 
 var font *truetype.Font
 
@@ -148,27 +149,45 @@ func loadFont() bool {
 }
 
 func writeText(img image.Image, text string) *image.RGBA {
+	segs := strings.Split(text, ".")
+	if len(segs) == 2 {
+		text = segs[0]
+	}
 	bounds := img.Bounds()
 	//根据b画布的大小新建一个新图像
 	drawimage := image.NewRGBA(bounds)
 	draw.Draw(drawimage, bounds, img, image.ZP, draw.Src)
+	width := bounds.Dx()
+	height := bounds.Dy()
 
 	c := freetype.NewContext()
 	c.SetDPI(fontDPI)
 	c.SetFont(font)
+	fontSize = float64(height) / 11
 	c.SetFontSize(fontSize)
 	c.SetClip(drawimage.Bounds())
 	c.SetDst(drawimage)
 	c.SetSrc(image.White)
-
-	width := bounds.Dx()
-	height := bounds.Dy()
 	pt := freetype.Pt(width/10, height/10) // 字出现的位置
 
 	_, err := c.DrawString(text, pt)
 	if err != nil {
 		fmt.Println(err)
 		return nil
+	}
+
+	{
+		// 日期
+		c := freetype.NewContext()
+		c.SetDPI(fontDPI)
+		c.SetFont(font)
+		fontSize = float64(height) / 11
+		c.SetFontSize(fontSize)
+		c.SetClip(drawimage.Bounds())
+		c.SetDst(drawimage)
+		c.SetSrc(image.White)
+		pt := freetype.Pt(width/10, height/5) // 字出现的位置
+		c.DrawString(os.Args[2], pt)
 	}
 	return drawimage
 }
